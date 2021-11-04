@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/vue@3.0.2"></script>
+
+
+</head>
+<body>
+    <div id="app" @load="track">
+        <section class="first" v-if="!playerCard && !fav">
+         
+           <div class="upper"><ion-icon name="heart-outline" class="upper-heart" @click="favSwap"></ion-icon><a class="search-btn"><input type="text" class="search" placeholder="Search..." onkeyup="keyFunction()"><ion-icon name="search-outline" class="search-ico"></ion-icon></a></div>
+            <ul class="songs">
+                <li class="song" v-for="song in songs" @click="swap(); play(song); delay(song)"><img :src="song.img" alt="song" class="song-img"><div class="col"><h2 onclick="random_bg_color()" >{{song.nadpis}}</h2> <small>{{song.autor}}</small></div></li>
+            </ul>
+        </section>
+        <section class="favo" v-if="fav">
+
+            <div class="upper"><ion-icon name="heart-outline" class="upper-heart" @click="favSwap"></ion-icon><a class="search-btn"><input type="text" class="search" placeholder="Search..." onkeyup="keyFunction()"><ion-icon name="search-outline" class="search-ico"></ion-icon></a></div>
+            <ul class="songs">
+                <li class="song" v-for="favSong in favs" @click="swap(); play(song); favSwap()"><img :src="favSong.img" alt="song" class="song-img"><div class="col"><h2 onclick="random_bg_color()" >{{favSong.nadpis}}</h2> <small>{{favSong.autor}}</small></div></li>
+            </ul>
+
+        </section>
+        <section class="player" v-if="playerCard">
+            <div class="up">
+            <div class="gt" @click="swap(); pause();" onclick="random_bg_color()">&gt;</div>
+            <div class="text" :class="{vueTxt : this.current.nadpis.length > 23}">
+                <h2 class="nadpis" :class="{vueNadpis : this.current.nadpis.length > 23}">{{current.nadpis}}</h2>
+                <small class="autor">{{ current.autor}}</small>
+            </div>
+        </div>
+        <div class="main">
+            <img src="pngegg.png" alt="music" class="musicPlayer">
+        </div>
+        <div class="bottom"> 
+            <div class="btns">
+                <ion-icon name="heart-outline" class="upper-heart" @click="favAdd"></ion-icon>
+                <ion-icon name="shuffle-outline" class="random" @click="ran" onclick="randomStyle()"></ion-icon>
+                <ion-icon name="play-skip-back-outline" class="prev" @click="prev"></ion-icon>
+                <span v-if="!isPlaying"><ion-icon name="play-outline" class="play" @click="play"></ion-icon></span>
+                <span v-else><ion-icon name="pause-outline" class="pause" @click="pause"></ion-icon></span>
+                <ion-icon name="play-skip-forward-outline" class="next" @click="next" onclick="random_bg_color()"></ion-icon>
+                <ion-icon name="sync-outline" class="repeat" @click="repeat" onclick="repeatStyle()"></ion-icon>
+            </div>
+            <div class="time">
+                <div class="current-time">{{currTime}}</div>
+                <input type="range" min="1" max="100" value="0"  class="seek_slider" :v-model="changeTime">
+                <div class="duration">{{time}}</div>
+            </div>
+        </div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+    <script defer>
+          function random_bg_color(){
+            let hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e'];
+            let a;
+        
+            function populate(a){
+                for(let i=0; i<6; i++){
+                    let x = Math.round(Math.random() * 14);
+                    let y = hex[x];
+                    a += y;
+                }
+                return a;
+            }
+            let Color1 = populate('#');
+            let Color2 = populate('#');
+            var angle = 'to right';
+        
+            let gradient = 'linear-gradient(' + angle + ',' + Color1 + ', ' + Color2 + ")";
+            document.querySelector('#app').style.background = gradient;
+        }
+        random_bg_color()
+
+        function keyFunction(){
+    let FilterValue, input, cards, card,i,h2,small
+
+    input = document.querySelector('.search')
+    FilterValue = input.value.toUpperCase()
+    cards = document.querySelector('.song')
+    card = document.getElementsByTagName('li')
+    console.log(FilterValue)
+    for(i=0;i<card.length;i++){
+        h2 = card[i].getElementsByTagName('h2')[0];
+        small = card[i].getElementsByTagName('small')[0]
+        if(h2.innerHTML.toUpperCase().indexOf(FilterValue) > -1 || small.innerHTML.toUpperCase().indexOf(FilterValue) > -1){
+            card[i].style.display =''
+        } else{
+            card[i].style.display ='none'
+        }
+    }
+}
+
+    function randomStyle(){
+        document.querySelector('.random').classList.toggle('blue')
+    }
+    function repeatStyle(){
+        document.querySelector('.repeat').classList.toggle('blue')
+    }
+    </script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
