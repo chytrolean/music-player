@@ -12,6 +12,7 @@
 </head>
 <body>
     <div id="app" @load="track">
+     <article v-if="trackList">
         <section class="first" v-if="!playerCard && !fav">
          
            <div class="upper"><ion-icon name="heart-outline" class="upper-heart" @click="favSwap"></ion-icon><a class="search-btn"><input type="text" class="search" placeholder="Search..." onkeyup="keyFunction()"><ion-icon name="search-outline" class="search-ico"></ion-icon></a></div>
@@ -23,11 +24,13 @@
 
             <div class="upper"><ion-icon name="heart-outline" class="upper-heart" @click="favSwap"></ion-icon><a class="search-btn"><input type="text" class="search" placeholder="Search..." onkeyup="keyFunction()"><ion-icon name="search-outline" class="search-ico"></ion-icon></a></div>
             <ul class="songs">
-                <li class="song" v-for="favSong in favs" @click="swap(); play(song); favSwap()"><img :src="favSong.img" alt="song" class="song-img"><div class="col"><h2 onclick="random_bg_color()" >{{favSong.nadpis}}</h2> <small>{{favSong.autor}}</small></div></li>
+                <li class="song" v-for="favSong in favs" @click="swap(); favSwap(); favPlay(song)"><img :src="favSong.img" alt="song" class="song-img"><div class="col"><h2 onclick="random_bg_color()" >{{favSong.nadpis}}</h2> <small>{{favSong.autor}}</small></div></li>
             </ul>
 
         </section>
-        <section class="player" v-if="playerCard">
+    </article>
+        <article>
+          <section class="player" v-if="playerCard">
             <div class="up">
             <div class="gt" @click="swap(); pause();" onclick="random_bg_color()">&gt;</div>
             <div class="text" :class="{vueTxt : this.current.nadpis.length > 23}">
@@ -55,6 +58,37 @@
             </div>
         </div>
         </section>
+
+
+        <section class="player" v-if="favPlayer">
+            <div class="up">
+            <div class="gt" @click="swap(); pause();" onclick="random_bg_color()">&gt;</div>
+            <div class="text" :class="{vueTxt : this.current.nadpis.length > 23}">
+                <h2 class="nadpis" :class="{vueNadpis : this.current.nadpis.length > 23}">{{current.nadpis}}</h2>
+                <small class="autor">{{ favs.autor}}</small>
+            </div>
+        </div>
+        <div class="main">
+            <img src="pngegg.png" alt="music" class="musicPlayer">
+        </div>
+        <div class="bottom"> 
+            <div class="btns">
+                <ion-icon name="heart-outline" class="upper-heart" @click="favAdd"></ion-icon>
+                <ion-icon name="shuffle-outline" class="random" @click="ran" onclick="randomStyle()"></ion-icon>
+                <ion-icon name="play-skip-back-outline" class="prev" @click="favPrev"></ion-icon>
+                <span v-if="!isPlaying"><ion-icon name="play-outline" class="play" @click="favPlay"></ion-icon></span>
+                <span v-else><ion-icon name="pause-outline" class="pause" @click="Pause"></ion-icon></span>
+                <ion-icon name="play-skip-forward-outline" class="next" @click="favNext" onclick="random_bg_color()"></ion-icon>
+                <ion-icon name="sync-outline" class="repeat" @click="repeat" onclick="repeatStyle()"></ion-icon>
+            </div>
+            <div class="time">
+                <div class="current-time">{{currTime}}</div>
+                <input type="range" min="1" max="100" value="0"  class="seek_slider" :v-model="changeTime">
+                <div class="duration">{{time}}</div>
+            </div>
+        </div>
+        </section>
+    </article>
     </div>
 
     <script src="app.js"></script>
