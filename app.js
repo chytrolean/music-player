@@ -14,6 +14,8 @@ const app = Vue.createApp({
             currSecs: 0,
             repeatBtn: false,
             random: false,
+            favPlayer: false,
+            trackList: true,
             favs: [],
             songs: [
                 {
@@ -102,12 +104,48 @@ const app = Vue.createApp({
         }
     },
     methods: {
+        favPlay(song) {
+            if(typeof song.src != 'undefined'){
+                this.current = song
+                this.player.src = this.favs.src
+            }
+           
+            this.player.play()
+            this.isPlaying = true
+        },
+         favNext(){
+            this.index++
+            if(this.index > this.favs.length -1){
+                this.index = 0
+            }
+
+            if(this.random === true){
+                this.index = Math.round(Math.random() * this.favs.length)
+            }
+            this.current = this.favs[this.index]
+            this.play(this.current)
+        },
+        favPrev(){
+            this.index--
+            if(this.index < 0){
+                this.index = this.favs.length -1
+            }
+            if(this.random === true){
+                this.index = Math.round(Math.random() * this.favs.length)
+            }
+            this.current = this.favs[this.index]
+            this.play(this.current)
+
+        },
         favSwap(){
             this.fav = !this.fav
         },
         favAdd(){
             this.favs.push(this.current)
             alert(this.current.nadpis + ' was Added!')
+            console.log(this.favs)
+            console.log(this.songs)
+
         },
         delay(){
             this.time = Math.round(this.player.duration)
@@ -201,6 +239,7 @@ const app = Vue.createApp({
         swap(){
             this.playerCard = !this.playerCard
             this.isPlaying = !this.isPlaying
+            this.trackList = !this.trackList
         }
     },
     created(){
